@@ -15,15 +15,15 @@
  *
  * @example
  * import React from 'react';
- * import addLogger from '@xailabs/addLogger';
- * @addLogger('App')
+ * import logger from '@xailabs/logger';
+ * @logger('App')
  * class App extends React.Component {
  *      componentDidMount() {
  *          this.logger.warn('watch out!'); // logs '[App] watch out!'
  *      }
  * }
  */
-export default function addLogger(name = 'logger', {
+export default function loggerDecorator(name = 'logger', {
     logger = console,
     functions = ['log', 'warn', 'info', 'error', 'debug', 'trace'],
     accessor = 'logger',
