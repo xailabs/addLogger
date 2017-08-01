@@ -1,8 +1,8 @@
 window.esdocSearchIndex = [
   [
-    "@xailabs/logger/src/logger.js~loggerdecorator",
-    "function/index.html#static-function-loggerDecorator",
-    "<span>loggerDecorator</span> <span class=\"search-result-import-path\">@xailabs/logger/src/logger.js</span>",
+    "@xailabs/logger/src/logger.js~logger",
+    "function/index.html#static-function-logger",
+    "<span>logger</span> <span class=\"search-result-import-path\">@xailabs/logger/src/logger.js</span>",
     "function"
   ],
   [
