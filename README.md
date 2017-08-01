@@ -5,6 +5,14 @@ The logger object prepends a name to all output.
 
 Documentation: [https://xailabs.github.io/logger/](https://xailabs.github.io/logger/)
 
+## Installation
+
+    npm install @xailabs/logger
+
+or:
+
+    yarn add @xailabs/logger
+
 ## Examples
 
 Default usage with [decorator syntax](https://www.npmjs.com/package/babel-plugin-transform-decorators-legacy):
