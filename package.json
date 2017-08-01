@@ -1,0 +1,26 @@
+{
+  "name": "@xailabs/addLogger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "babel-tape-runner test/**/*.test.js | faucet",
+    "build": "babel src -d lib",
+    "docs": "esdoc src",
+    "prepublish": "npm test && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-tape-runner": "^2.0.1",
+    "esdoc": "^1.0.1",
+    "esdoc-standard-plugin": "^1.0.0"
+  },
+  "dependencies": {
+    "faucet": "^0.0.1",
+    "tape": "^4.8.0"
+  }
+}
