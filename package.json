@@ -1,8 +1,8 @@
 {
   "name": "@xailabs/logger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
-  "main": "lib/index.js",
+  "main": "lib/logger.js",
   "scripts": {
     "test": "babel-tape-runner test/**/*.test.js | faucet",
     "build": "babel src -d lib",
