@@ -17,3 +17,20 @@ test('Adds logger to class prototype', (t) => {
     t.ok(Dummy.prototype.logger);
     t.end();
 });
+
+test('Adds name prefix to messages', (t) => {
+    let logged;
+    class Dummy {
+        constructor() { this.logger.log('ok'); }
+    };
+
+    logger('Dummy', {
+        logger: {log: (...args) => logged = args
+    }})(Dummy);
+
+    new Dummy();
+
+
+    t.deepEquals(logged, ['[Dummy]', 'ok']);
+    t.end();
+});

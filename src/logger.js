@@ -23,7 +23,7 @@
  *      }
  * }
  */
-export default function loggerDecorator(name = 'logger', {
+export default function logger(name = 'logger', {
     logger = console,
     functions = ['log', 'warn', 'info', 'error', 'debug', 'trace'],
     accessor = 'logger',
