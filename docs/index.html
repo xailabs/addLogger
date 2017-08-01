@@ -37,7 +37,60 @@
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="-xailabs-logger">@xailabs/logger</h1><p>A class decorator that adds a <code>logger</code> object to instances.
 The logger object prepends a name to all output.</p>
 <p>Documentation: <a href="https://xailabs.github.io/logger/">https://xailabs.github.io/logger/</a></p>
-</div>
+<h2 id="examples">Examples</h2><p>Default usage with <a href="https://www.npmjs.com/package/babel-plugin-transform-decorators-legacy">decorator syntax</a>:</p>
+<pre><code><code class="source-code prettyprint">import {Component} from &apos;react&apos;;
+import logger from &apos;@xailabs/logger&apos;;
+@logger(&apos;App&apos;)
+class App extends Component {
+     componentDidMount() {
+         this.logger.warn(&apos;watch out!&apos;); // logs a warning &apos;[App] watch out!&apos;
+     }
+}</code>
+</code></pre><p>Without decorator syntax</p>
+<pre><code><code class="source-code prettyprint">import {Component} from &apos;react&apos;;
+import logger from &apos;@xailabs/logger&apos;;
+class App extends Component {
+     componentDidMount() {
+         this.logger.log(&apos;ok&apos;);
+     }
+}
+logger(&apos;App&apos;)(App);</code>
+</code></pre><p>Timestamp in prefix:</p>
+<pre><code><code class="source-code prettyprint">@logger(() =&gt; `App (${new Date().toISOString()})`)
+class App extends Component {
+     componentDidMount() {
+         this.log(&apos;ok&apos;); // logs something like &apos;[App  (2017-08-01T16:37:14.444Z)] ok&apos;
+     }
+}   </code>
+</code></pre><p>Custom accessor</p>
+<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {accessor: &apos;logging&apos;})
+class App extends Component {
+     componentDidMount() {
+         this.logging.log(&apos;ok&apos;); // access via this.logging
+     }
+}   </code>
+</code></pre><p>Magic &apos;this&apos; accessor</p>
+<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {accessor: &apos;this&apos;})
+class App extends Component {
+     componentDidMount() {
+         this.log(&apos;ok&apos;); // access via this
+     }
+}   </code>
+</code></pre><p>Custom logger:</p>
+<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {logger: require(&apos;winston&apos;)})
+class App extends Component {
+     componentDidMount() {
+         this.log(&apos;ok&apos;); // logs using winston
+     }
+}   </code>
+</code></pre><p>Multiple loggers:</p>
+<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {logger: [window.console, require(&apos;winston&apos;), anotherCustomLogger})
+class App extends Component {
+     componentDidMount() {
+         this.log(&apos;ok&apos;); // logs to window.console and winston
+     }
+}   </code>
+</code></pre></div>
 </div>
 
 <footer class="footer">
