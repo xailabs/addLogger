@@ -25,12 +25,66 @@ test('Adds name prefix to messages', (t) => {
     };
 
     logger('Dummy', {
-        logger: {log: (...args) => logged = args
-    }})(Dummy);
+        logger: {log: (...args) => logged = args}
+    })(Dummy);
 
     new Dummy();
 
 
     t.deepEquals(logged, ['[Dummy]', 'ok']);
+    t.end();
+});
+
+test('Respects log level string', (t) => {
+    let logged = [];
+
+    class Dummy {
+        constructor() {
+            this.logger.log('log');
+            this.logger.info('info');
+            this.logger.warn('warn');
+        }
+    };
+
+    logger('Dummy', {
+        logger: {
+            log: (...args) => logged.push(args.join(' ')),
+            info: (...args) => logged.push(args.join(' ')),
+            warn: (...args) => logged.push(args.join(' ')),
+        },
+        level: 'info'
+    })(Dummy);
+
+    new Dummy();
+
+
+    t.deepEquals(logged, ['[Dummy] log', '[Dummy] info']);
+    t.end();
+});
+
+test('Respects log level number', (t) => {
+    let logged = [];
+
+    class Dummy {
+        constructor() {
+            this.logger.log('log');
+            this.logger.info('info');
+            this.logger.warn('warn');
+        }
+    };
+
+    logger('Dummy', {
+        logger: {
+            log: (...args) => logged.push(args.join(' ')),
+            info: (...args) => logged.push(args.join(' ')),
+            warn: (...args) => logged.push(args.join(' ')),
+        },
+        level: 1
+    })(Dummy);
+
+    new Dummy();
+
+
+    t.deepEquals(logged, ['[Dummy] log', '[Dummy] info']);
     t.end();
 });
