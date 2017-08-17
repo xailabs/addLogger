@@ -1,7 +1,9 @@
 # @xailabs/logger
 
 A class decorator that adds a `logger` object to instances.
-The logger object prepends a name to all output.
+The logger object prepends a name to all of its output.
+
+Very usefull when working with many different components, or sources of log messages in general.
 
 Documentation: [https://xailabs.github.io/logger/](https://xailabs.github.io/logger/)
 
@@ -28,8 +30,6 @@ Default usage with [decorator syntax](https://www.npmjs.com/package/babel-plugin
 
 Without decorator syntax
 
-    import {Component} from 'react';
-    import logger from '@xailabs/logger';
     class App extends Component {
          componentDidMount() {
              this.logger.log('ok');
@@ -37,12 +37,25 @@ Without decorator syntax
     }
     logger('App')(App);
 
-Timestamp in prefix:
+With log level. (See `config.level` in the [docs](https://xailabs.github.io/logger/function/index.html#static-function-logger) for details)
 
-    @logger(() => `App (${new Date().toISOString()})`)
+    const logLevel = process.env.NODE_ENV === 'development' ? 'debug' : 'info';
+    @logger('App', {level: logLevel})
     class App extends Component {
          componentDidMount() {
-             this.log('ok'); // logs something like '[App  (2017-08-01T16:37:14.444Z)] ok'
+            this.logger.log('ok'); // logs in both production and development
+            this.logger.info('ok'); // logs in both production and development
+            this.logger.warn('watch out!'); // only logs in development
+         }
+    }
+
+
+Using a function instead of a string as name - retrieves dynamic values
+
+    @logger(() => new Date().toISOString())
+    class App extends Component {
+         componentDidMount() {
+             this.log('ok'); // logs something like '[2017-08-01T16:37:14.444Z] ok'
          }
     }   
 
@@ -60,24 +73,24 @@ Magic 'this' accessor
     @logger('App', {accessor: 'this'})
     class App extends Component {
          componentDidMount() {
-             this.log('ok'); // access via this
+             this.log('ok'); // access via this.log() instead of this.something.log()
          }
     }   
 
-Custom logger:
+Custom log target:
 
     @logger('App', {logger: require('winston')})
     class App extends Component {
          componentDidMount() {
-             this.log('ok'); // logs using winston
+             this.log('ok'); // logs using winston instead of the console
          }
     }   
 
-Multiple loggers:
+Multiple log targets:
 
     @logger('App', {logger: [window.console, require('winston'), anotherCustomLogger})
     class App extends Component {
          componentDidMount() {
-             this.log('ok'); // logs to window.console and winston
+             this.log('ok'); // logs to all the logger objects that have a "log" function
          }
     }   

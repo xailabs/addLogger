@@ -37,7 +37,10 @@
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="-xailabs-logger">@xailabs/logger</h1><p>A class decorator that adds a <code>logger</code> object to instances.
 The logger object prepends a name to all output.</p>
 <p>Documentation: <a href="https://xailabs.github.io/logger/">https://xailabs.github.io/logger/</a></p>
-<h2 id="examples">Examples</h2><p>Default usage with <a href="https://www.npmjs.com/package/babel-plugin-transform-decorators-legacy">decorator syntax</a>:</p>
+<h2 id="installation">Installation</h2><pre><code><code class="source-code prettyprint">npm install @xailabs/logger</code>
+</code></pre><p>or:</p>
+<pre><code><code class="source-code prettyprint">yarn add @xailabs/logger</code>
+</code></pre><h2 id="examples">Examples</h2><p>Default usage with <a href="https://www.npmjs.com/package/babel-plugin-transform-decorators-legacy">decorator syntax</a>:</p>
 <pre><code><code class="source-code prettyprint">import {Component} from &apos;react&apos;;
 import logger from &apos;@xailabs/logger&apos;;
 @logger(&apos;App&apos;)
@@ -47,19 +50,27 @@ class App extends Component {
      }
 }</code>
 </code></pre><p>Without decorator syntax</p>
-<pre><code><code class="source-code prettyprint">import {Component} from &apos;react&apos;;
-import logger from &apos;@xailabs/logger&apos;;
-class App extends Component {
+<pre><code><code class="source-code prettyprint">class App extends Component {
      componentDidMount() {
          this.logger.log(&apos;ok&apos;);
      }
 }
 logger(&apos;App&apos;)(App);</code>
-</code></pre><p>Timestamp in prefix:</p>
-<pre><code><code class="source-code prettyprint">@logger(() =&gt; `App (${new Date().toISOString()})`)
+</code></pre><p>With log level. (See <a href="docs">https://xailabs.github.io/logger/function/index.html#static-function-logger</a> for details)</p>
+<pre><code><code class="source-code prettyprint">const logLevel = process.env.NODE_ENV === &apos;development&apos; ? &apos;debug&apos; : &apos;info&apos;;
+@logger(&apos;App&apos;, {level: logLevel})
 class App extends Component {
      componentDidMount() {
-         this.log(&apos;ok&apos;); // logs something like &apos;[App  (2017-08-01T16:37:14.444Z)] ok&apos;
+        this.logger.log(&apos;ok&apos;); // logs in both production and development
+        this.logger.info(&apos;ok&apos;); // logs in both production and development
+        this.logger.warn(&apos;watch out!&apos;); // only logs in development
+     }
+}</code>
+</code></pre><p>Function as name prefix</p>
+<pre><code><code class="source-code prettyprint">@logger(() =&gt; new Date().toISOString())
+class App extends Component {
+     componentDidMount() {
+         this.log(&apos;ok&apos;); // logs something like &apos;[2017-08-01T16:37:14.444Z] ok&apos;
      }
 }   </code>
 </code></pre><p>Custom accessor</p>
@@ -73,7 +84,7 @@ class App extends Component {
 <pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {accessor: &apos;this&apos;})
 class App extends Component {
      componentDidMount() {
-         this.log(&apos;ok&apos;); // access via this
+         this.log(&apos;ok&apos;); // access via this instead of this.something
      }
 }   </code>
 </code></pre><p>Custom logger:</p>
