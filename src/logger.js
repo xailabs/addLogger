@@ -54,5 +54,6 @@ export default function logger(name = 'logger', {
         else {
             (target.prototype || target)[accessor] = customLogger;
         }
+        return target;
     };
 }
