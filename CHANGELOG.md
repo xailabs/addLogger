@@ -1,3 +1,7 @@
+# 1.1.3
+
+- move faucet and tape to devDependencies
+
 # 1.1.2
 
 - Return the class instance from the decorator
