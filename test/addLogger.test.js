@@ -4,6 +4,16 @@ import logger from '../src/logger';
 
 // TODO write proper test suite
 
+test('Creates a new logger when ivoked without target', (t) => {
+    let logged;
+    const l = logger('foo', {
+        backend: {log: (...args) => logged = args}
+    })();
+    l.log('ok')
+    t.deepEquals(logged, ['[foo]', 'ok']);
+    t.end();
+});
+
 test('Adds logger to plain object', (t) => {
     const obj = {};
     logger()(obj);
@@ -25,7 +35,7 @@ test('Adds name prefix to messages', (t) => {
     };
 
     logger('Dummy', {
-        logger: {log: (...args) => logged = args}
+        backend: {log: (...args) => logged = args}
     })(Dummy);
 
     new Dummy();
@@ -47,7 +57,7 @@ test('Respects log level string', (t) => {
     };
 
     logger('Dummy', {
-        logger: {
+        backend: {
             log: (...args) => logged.push(args.join(' ')),
             info: (...args) => logged.push(args.join(' ')),
             warn: (...args) => logged.push(args.join(' ')),
@@ -74,7 +84,7 @@ test('Respects log level number', (t) => {
     };
 
     logger('Dummy', {
-        logger: {
+        backend: {
             log: (...args) => logged.push(args.join(' ')),
             info: (...args) => logged.push(args.join(' ')),
             warn: (...args) => logged.push(args.join(' ')),

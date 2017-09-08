@@ -37,6 +37,14 @@ Without decorator syntax
     }
     logger('App')(App);
 
+
+Without target - creates a new logger object
+
+    import {Component} from 'react';
+    import createLogger from '@xailabs/logger';
+    const logger = createLogger('App')();
+    logger.info('ok');
+
 With log level. (See `config.level` in the [docs](https://xailabs.github.io/logger/function/index.html#static-function-logger) for details)
 
     const logLevel = process.env.NODE_ENV === 'development' ? 'debug' : 'info';
@@ -77,20 +85,20 @@ Magic 'this' accessor
          }
     }   
 
-Custom log target:
+Custom log backend:
 
-    @logger('App', {logger: require('winston')})
+    @logger('App', {backend: require('winston')})
     class App extends Component {
          componentDidMount() {
-             this.log('ok'); // logs using winston instead of the console
+             this.logger.log('ok'); // logs using winston instead of the console
          }
     }   
 
-Multiple log targets:
+Multiple log backends:
 
-    @logger('App', {logger: [window.console, require('winston'), anotherCustomLogger})
+    @logger('App', {backend: [window.console, require('winston'), anotherCustomLogger})
     class App extends Component {
          componentDidMount() {
-             this.log('ok'); // logs to all the logger objects that have a "log" function
+             this.logger.log('ok'); // logs to all the logger objects that have a "log" function
          }
     }   

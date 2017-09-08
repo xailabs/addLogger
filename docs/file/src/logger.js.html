@@ -44,7 +44,7 @@
  *
  * @param {string|function} [name=&apos;logger&apos;] - The name prefix. Prepended to all output of the created logger. If it is a function, the function should return a string.
  * @param {object} [config] - An optional configuration object.
- * @param {object|array} [config.logger = window.console] - The logger object that will be used. Can also be an array of logger objects.
+ * @param {object|array} [config.backend = window.console] - The logger object that will be used. Can also be an array of logger objects.
  * @param {array} [config.functions = [&apos;log&apos;, &apos;info&apos;, &apos;warn&apos;, &apos;error&apos;, &apos;trace&apos;, &apos;table&apos;, &apos;debug&apos;]] - An array of function names supported by the `logger` object..
  * @param {string} [config.accessor=&apos;logger&apos;] - The name by which the logger object can be accessed on the decorated instance.
  * @param {function} [config.prefixer = (name) =&gt; `[${name}]`] - A function that creates the prefix. Receives the `name` string and should return a string.
@@ -62,28 +62,31 @@
  * }
  */
 export default function logger(name = &apos;logger&apos;, {
-    logger = console,
-    functions = [&apos;log&apos;, &apos;info&apos;, &apos;warn&apos;, &apos;error&apos;, &apos;trace&apos;, &apos;table&apos;, &apos;debug&apos;],
+    backend = console,
+    functions = [&apos;log&apos;, &apos;info&apos;, &apos;warn&apos;, &apos;error&apos;, &apos;trace&apos;, &apos;table&apos;, &apos;debug&apos;, &apos;dir&apos;],
     accessor = &apos;logger&apos;,
     prefixer = (name) =&gt; `[${name}]`,
     level = &apos;debug&apos;
 } = {}) {
     return function decorateClass(target) {
+        if (!target) {
+            target = Object.create(null);
+            accessor = &apos;this&apos;;
+        }
         const customLogger = functions.reduce((result, fn) =&gt; {
-            return Object.assign(result, {
-                [fn]: (...args) =&gt; {
-                    const fnLevel = functions.indexOf(fn);
-                    const allowedLevel = typeof level === &apos;number&apos; ? level : functions.indexOf(level);
-                    if (!allowedLevel || fnLevel &gt; allowedLevel) {
-                        return;
-                    }
-                    const prefix = prefixer(typeof name === &apos;function&apos; ? name({target, args}) : name);
-                    const logArgs = [prefix, ...args];
-                    const loggers = Array.isArray(logger) ? logger : [logger];
-                    loggers.forEach(logger =&gt; logger[fn].apply(logger, logArgs));
-                    return true;
+            result[fn] = (function(...args) {
+                const fnLevel = functions.indexOf(fn);
+                const allowedLevel = typeof level === &apos;number&apos; ? level : functions.indexOf(level);
+                if (!allowedLevel || fnLevel &gt; allowedLevel) {
+                    return;
                 }
-            });
+                const prefix = prefixer(typeof name === &apos;function&apos; ? name({target, args}) : name);
+                const logArgs = [prefix, ...args];
+                const backends = Array.isArray(backend) ? backend : [backend];
+                backends.forEach(backend =&gt; backend[fn].apply(backend, logArgs));
+                return true;
+            }).bind(result);
+            return result;
         }, {});
         if (accessor === &apos;this&apos;) {
             Object.assign((target.prototype || target), customLogger);
@@ -91,6 +94,7 @@ export default function logger(name = &apos;logger&apos;, {
         else {
             (target.prototype || target)[accessor] = customLogger;
         }
+        return target;
     };
 }
 </code></pre>

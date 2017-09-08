@@ -1,3 +1,8 @@
+# 1.2.0
+
+- use empty object as default target. allows creating logger objects
+- rename option `logger` to `backend`.
+
 # 1.1.3
 
 - move faucet and tape to devDependencies

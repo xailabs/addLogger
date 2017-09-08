@@ -35,7 +35,8 @@
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="-xailabs-logger">@xailabs/logger</h1><p>A class decorator that adds a <code>logger</code> object to instances.
-The logger object prepends a name to all output.</p>
+The logger object prepends a name to all of its output.</p>
+<p>Very usefull when working with many different components, or sources of log messages in general.</p>
 <p>Documentation: <a href="https://xailabs.github.io/logger/">https://xailabs.github.io/logger/</a></p>
 <h2 id="installation">Installation</h2><pre><code><code class="source-code prettyprint">npm install @xailabs/logger</code>
 </code></pre><p>or:</p>
@@ -56,7 +57,12 @@ class App extends Component {
      }
 }
 logger(&apos;App&apos;)(App);</code>
-</code></pre><p>With log level. (See <a href="docs">https://xailabs.github.io/logger/function/index.html#static-function-logger</a> for details)</p>
+</code></pre><p>Without target - creates a new logger object</p>
+<pre><code><code class="source-code prettyprint">import {Component} from &apos;react&apos;;
+import createLogger from &apos;@xailabs/logger&apos;;
+const logger = createLogger(&apos;App&apos;)();
+logger.info(&apos;ok&apos;);</code>
+</code></pre><p>With log level. (See <code>config.level</code> in the <a href="https://xailabs.github.io/logger/function/index.html#static-function-logger">docs</a> for details)</p>
 <pre><code><code class="source-code prettyprint">const logLevel = process.env.NODE_ENV === &apos;development&apos; ? &apos;debug&apos; : &apos;info&apos;;
 @logger(&apos;App&apos;, {level: logLevel})
 class App extends Component {
@@ -66,7 +72,7 @@ class App extends Component {
         this.logger.warn(&apos;watch out!&apos;); // only logs in development
      }
 }</code>
-</code></pre><p>Function as name prefix</p>
+</code></pre><p>Using a function instead of a string as name - retrieves dynamic values</p>
 <pre><code><code class="source-code prettyprint">@logger(() =&gt; new Date().toISOString())
 class App extends Component {
      componentDidMount() {
@@ -84,21 +90,21 @@ class App extends Component {
 <pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {accessor: &apos;this&apos;})
 class App extends Component {
      componentDidMount() {
-         this.log(&apos;ok&apos;); // access via this instead of this.something
+         this.log(&apos;ok&apos;); // access via this.log() instead of this.something.log()
      }
 }   </code>
-</code></pre><p>Custom logger:</p>
-<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {logger: require(&apos;winston&apos;)})
+</code></pre><p>Custom log backend:</p>
+<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {backend: require(&apos;winston&apos;)})
 class App extends Component {
      componentDidMount() {
-         this.log(&apos;ok&apos;); // logs using winston
+         this.logger.log(&apos;ok&apos;); // logs using winston instead of the console
      }
 }   </code>
-</code></pre><p>Multiple loggers:</p>
-<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {logger: [window.console, require(&apos;winston&apos;), anotherCustomLogger})
+</code></pre><p>Multiple log backends:</p>
+<pre><code><code class="source-code prettyprint">@logger(&apos;App&apos;, {backend: [window.console, require(&apos;winston&apos;), anotherCustomLogger})
 class App extends Component {
      componentDidMount() {
-         this.log(&apos;ok&apos;); // logs to window.console and winston
+         this.logger.log(&apos;ok&apos;); // logs to all the logger objects that have a &quot;log&quot; function
      }
 }   </code>
 </code></pre></div>
